@@ -158,7 +158,7 @@ class _AddExpenseState extends State<AddExpense> {
                                           hintText: "Icon",
                                           border: OutlineInputBorder(
                                               borderRadius: isExpanded
-                                                  ? BorderRadius.vertical(
+                                                  ? const BorderRadius.vertical(
                                                       top: Radius.circular(12),
                                                     )
                                                   : BorderRadius.circular(12),
