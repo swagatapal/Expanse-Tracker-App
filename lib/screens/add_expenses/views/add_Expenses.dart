@@ -293,6 +293,7 @@ class _AddExpenseState extends State<AddExpense> {
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
+
                                           style: TextButton.styleFrom(
                                               backgroundColor: Colors.black,
                                               shape: RoundedRectangleBorder(
