@@ -1,10 +1,13 @@
 import 'dart:ffi';
 import 'dart:math';
 
+import 'package:expanse_tracker/screens/add_expenses/bloc/create_categorybloc/create_category_bloc.dart';
 import 'package:expanse_tracker/screens/add_expenses/views/add_Expenses.dart';
 import 'package:expanse_tracker/screens/home/views/main_screen.dart';
 import 'package:expanse_tracker/screens/stats/stats_screen.dart';
+import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -57,7 +60,10 @@ Color unselectedItem = Colors.grey;
         onPressed: (){
           Navigator.push(
             context, 
-            MaterialPageRoute<Void>(builder: (BuildContext context) => const AddExpense()
+            MaterialPageRoute<Void>(builder: (BuildContext context) => BlocProvider(
+              create: (context)=>CreateCategoryBloc(FirebaseExpenseRepo()),
+                child: const AddExpense()
+            )
             ),);
         },
         child: Container(

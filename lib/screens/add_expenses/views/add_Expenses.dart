@@ -1,7 +1,12 @@
+
+import 'package:expanse_tracker/screens/add_expenses/bloc/create_categorybloc/create_category_bloc.dart';
+import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 class AddExpense extends StatefulWidget {
   const AddExpense({super.key});
@@ -99,8 +104,11 @@ class _AddExpenseState extends State<AddExpense> {
                               bool isExpanded = false;
                               String iconSelected = '';
                                Color categoryColor = Colors.white;
+                                TextEditingController categoryNameController = TextEditingController();
+                                TextEditingController categoryIconController = TextEditingController();
+                                TextEditingController categoryColorController = TextEditingController();
                               return StatefulBuilder(
-                                  builder: (context, setState) {
+                                  builder: (ctx, setState) {
                                 return AlertDialog(
                                   title: const Text("Create a category"),
                                   content: Column(
@@ -108,7 +116,7 @@ class _AddExpenseState extends State<AddExpense> {
                                     children: [
                                       TextFormField(
                                         // readOnly: true,
-                                        // controller: dateController,
+                                        controller: categoryNameController,
 
                                         textAlignVertical:
                                             TextAlignVertical.center,
@@ -134,7 +142,7 @@ class _AddExpenseState extends State<AddExpense> {
                                       ),
                                       TextFormField(
                                         readOnly: true,
-                                        // controller: dateController,
+                                        controller: categoryIconController,
                                         textAlignVertical:
                                             TextAlignVertical.center,
                                         onTap: () async {
@@ -221,7 +229,7 @@ class _AddExpenseState extends State<AddExpense> {
                                       ),
                                       TextFormField(
                                         readOnly: true,
-                                        // controller: dateController,
+                                        controller: categoryColorController,
 
                                         textAlignVertical:
                                             TextAlignVertical.center,
@@ -229,39 +237,42 @@ class _AddExpenseState extends State<AddExpense> {
                                           showDialog(
                                               context: context,
                                               builder: (ctx2){
-                                                return AlertDialog(
-                                                      content:Column(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        children: [
-                                                          ColorPicker(
-                                                            pickerColor: Colors.blue,
-                                                            onColorChanged: (value){
-                                                              setState((){
-                                                                categoryColor = value;
-                                                              });
+                                                return BlocProvider.value(
+                                                  value: context.read<CreateCategoryBloc>(),
+                                                  child: AlertDialog(
+                                                        content:Column(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: [
+                                                            ColorPicker(
+                                                              pickerColor: Colors.blue,
+                                                              onColorChanged: (value){
+                                                                setState((){
+                                                                  categoryColor = value;
+                                                                });
 
-                                                            },
-                                                          ),
-                                                          SizedBox(
-                                                            height: 50,
-                                                            width: double.infinity,
-                                                            child: TextButton(
-                                                              onPressed: () {
-                                                                // print(categoryColor);
-                                                                Navigator.pop(ctx2);
                                                               },
-                                                              style: TextButton.styleFrom(
-                                                                  backgroundColor: Colors.black,
-                                                                  shape: RoundedRectangleBorder(
-                                                                      borderRadius: BorderRadius.circular(12))),
-                                                              child: const Text("save",
-                                                                  style: TextStyle(fontSize: 22, color: Colors.white)),
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ),
+                                                            SizedBox(
+                                                              height: 50,
+                                                              width: double.infinity,
+                                                              child: TextButton(
+                                                                onPressed: () {
+                                                                  // print(categoryColor);
+                                                                  Navigator.pop(ctx2);
+                                                                },
+                                                                style: TextButton.styleFrom(
+                                                                    backgroundColor: Colors.black,
+                                                                    shape: RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(12))),
+                                                                child: const Text("save",
+                                                                    style: TextStyle(fontSize: 22, color: Colors.white)),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
 
-                                                    );
+                                                      ),
+                                                );
                                               }
                                               );
 
@@ -291,7 +302,12 @@ class _AddExpenseState extends State<AddExpense> {
                                         height: kToolbarHeight,
                                         child: TextButton(
                                           onPressed: () {
-                                            Navigator.pop(context);
+                                            Category category = Category.empty;
+                                            category.categoryId = const Uuid().v1();
+                                            category.name = iconSelected;
+                                            category.icon = categoryColor.toString();
+                                            context.read<CreateCategoryBloc>().add(CreateCategory(category));
+                                            // Navigator.pop(context);
                                           },
 
                                           style: TextButton.styleFrom(

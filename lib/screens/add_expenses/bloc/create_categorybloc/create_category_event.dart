@@ -1,9 +1,5 @@
+part of 'create_category_bloc.dart';
 
-import 'package:equatable/equatable.dart';
-import 'package:expense_repository/expense_repository.dart';
-import 'package:flutter/material.dart';
-
-@immutable
 sealed class CreateCategoryEvent extends Equatable {
   const CreateCategoryEvent();
 
@@ -11,11 +7,11 @@ sealed class CreateCategoryEvent extends Equatable {
   List<Object> get props => [];
 }
 
-
-class CreateCategory extends CreateCategoryEvent{
+class CreateCategory extends CreateCategoryEvent {
   final Category category;
+
   const CreateCategory(this.category);
+
   @override
   List<Object> get props => [category];
-
 }
